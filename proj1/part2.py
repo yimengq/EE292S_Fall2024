@@ -92,7 +92,7 @@ def kalman_filter(accelx,dt):
                   [0., 1., dt],
                   [0., 0., 1.]])
     # measurement function
-    H = np.array([[1., 0., 0.]])
+    H = np.array([[0., 0., 1.]])
     # measurement noise
     R = np.array([[0.01]])
     # process noise
@@ -112,7 +112,7 @@ def kalman_filter(accelx,dt):
     kf.Q = Q
     kf.P = P
     
-    kf.predict(u=kf.u,B=kf.B, F=kf.F, Q=kf.Q)                        # State prediction
+    kf.predict()                        # State prediction
     kf.update(accelx)                                   # Update
 
     return kf.x
@@ -159,27 +159,15 @@ if __name__ == '__main__':
             else:
                 accelx_avg = sum(accelx_lst)/50
                 new_accelx = Accel[0] - accelx_avg
-                accelx_lst.pop(0)
-                accelx_lst.append(Accel[0])
+                # accelx_lst.pop(0)
+                # accelx_lst.append(Accel[0])
                 
-            state = kalman_filter(new_accelx,dt)
+                state = kalman_filter(new_accelx,dt)
+                print("position",state[0])
 
     except KeyboardInterrupt:
         # plot tilt angles when program is interrupted
-        # accel_plot = ax[0].plot(ts, accel_tilt)
-        # gyro_plot = ax[1].plot(ts, gyro_tilt)
-        # fuse_plot = ax[2].plot(ts, fuse_tilt)
+        accel_plot = ax[0].plot(ts, accel_tilt)
+        gyro_plot = ax[1].plot(ts, gyro_tilt)
+        fuse_plot = ax[2].plot(ts, fuse_tilt)
         # plt.savefig('part1_1.png')
-
-
-
-
-
-
-
-
-
-
-
-
-

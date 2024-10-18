@@ -127,6 +127,8 @@ if __name__ == '__main__':
     accel_tilt = []
     gyro_tilt = []
     fuse_tilt = []
+    
+    pos = []
 
     accelx_lst = []
     accelx_avg = -1
@@ -163,11 +165,13 @@ if __name__ == '__main__':
                 # accelx_lst.append(Accel[0])
                 
                 state = kalman_filter(new_accelx,dt)
+                pos.append(state[0])
                 print("position",state[0])
 
     except KeyboardInterrupt:
         # plot tilt angles when program is interrupted
-        accel_plot = ax[0].plot(ts, accel_tilt)
-        gyro_plot = ax[1].plot(ts, gyro_tilt)
-        fuse_plot = ax[2].plot(ts, fuse_tilt)
-        # plt.savefig('part1_1.png')
+        pos_plot = ax[0].plot(ts, pos)
+        # accel_plot = ax[0].plot(ts, accel_tilt)
+        # gyro_plot = ax[1].plot(ts, gyro_tilt)
+        # fuse_plot = ax[2].plot(ts, fuse_tilt)
+        plt.savefig('part2_pos.png')

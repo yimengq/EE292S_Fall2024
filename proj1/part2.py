@@ -190,6 +190,7 @@ if __name__ == '__main__':
         plt.plot(tn, accel_original, label='Original Acceleration')
         plt.xlabel('Time (s)')
         plt.ylabel('Acceleration (m/s^2)')
+        plt.legend()
         plt.savefig('acceleration_plot.png')  # Save acceleration plot
         plt.close()  # Close the current figure
         
@@ -199,6 +200,7 @@ if __name__ == '__main__':
         plt.plot(tn, vel_original, label='Original Velocity')
         plt.xlabel('Time (s)')
         plt.ylabel('Velocity (m/s)')
+        plt.legend()
         plt.savefig('vel_plot.png')  # Save acceleration plot
         plt.close()  # Close the current figure
         

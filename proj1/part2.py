@@ -101,7 +101,12 @@ if __name__ == '__main__':
     gyro_tilt = []
     fuse_tilt = []
     
-    pos = []
+    pos_kal = []
+    pos_original = []
+    vel_kal = []
+    vel_original = []
+    accel_kal = []
+    accel_original = []
 
     accelx_lst = []
     accelx_avg = -1
@@ -164,21 +169,39 @@ if __name__ == '__main__':
             else:
                 accelx_avg = sum(accelx_lst)/50
                 new_accelx = Accel[0] - accelx_avg
-                # print(new_accelx)
-
-                # accelx_lst.pop(0)
-                # accelx_lst.append(Accel[0])
                 kf.predict()                        # State prediction
                 kf.update(new_accelx) 
                 state = kf.x
-                pos.append(state[0])
+                # take out the velocity and acceleration
+                
+                accel_kal.append(state[0])
+                vel_kal.append(state[1])
+                pos_kal.append(state[2])
+                accel_original.append(new_accelx)
+                vel_original.append(new_accelx*dt)
+                pos_original.append(new_accelx*dt**2/2)
                 tn.append(currTime-time_base)
                 # print("position",state[0])
 
     except KeyboardInterrupt:
-        # plot tilt angles when program is interrupted
-        pos_plot = plt.plot(tn, pos)
-        # accel_plot = ax[0].plot(ts, accel_tilt)
-        # gyro_plot = ax[1].plot(ts, gyro_tilt)
-        # fuse_plot = ax[2].plot(ts, fuse_tilt)
+        # plot accel_kal together with accel_original
+        plt.figure()
+        plt.plot(tn, accel_kal, label='Kalman Filtered Acceleration')
+        plt.plot(tn, accel_original, label='Original Acceleration')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Acceleration (m/s^2)')
+        # plot vel_kal together with vel_original
+        plt.figure()
+        plt.plot(tn, vel_kal, label='Kalman Filtered Velocity')
+        plt.plot(tn, vel_original, label='Original Velocity')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Velocity (m/s)')
+        # plot pos_kal together with pos_original
+        plt.figure()
+        plt.plot(tn, pos_kal, label='Kalman Filtered Position')
+        plt.plot(tn, pos_original, label='Original Position')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Position (m)')
+        plt.legend()
+
         plt.savefig('part2_pos.png')

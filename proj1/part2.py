@@ -96,13 +96,13 @@ def kalman_filter(accelx,dt):
     # measurement noise
     R = np.array([[0.01]])
     # process noise
-    Q = np.array([[0., 0., 0.],
-                  [0., 0., 0.],
-                  [0., 0., 0.]])
+    Q = 1e-3*np.array([[1., 0., 0.],
+                  [0., 1., 0.],
+                  [0., 0., 1.]])
     # covariance matrix
-    P = np.array([[10000.,  0., 0.],
-                 [ 0., 10000., 0.],
-                 [ 0., 0., 10000.]])
+    P = 3e-3*np.array([[1.,  0., 0.],
+                 [ 0., 1., 0.],
+                 [ 0., 0., 1.]])
     # initialize Kalman Filter
     kf = KalmanFilter(dim_x=3, dim_z=1)
     kf.x = x
@@ -122,7 +122,7 @@ def kalman_filter(accelx,dt):
 if __name__ == '__main__':
     # initialize ICM20948
     icm20948=ICM20948()
-
+    time_base = 0
     # initialize lists to store tilt values
     accel_tilt = []
     gyro_tilt = []
@@ -134,10 +134,11 @@ if __name__ == '__main__':
     accelx_avg = -1
     
     ts = []
-    fig, ax = plt.subplots(3, 1)
-    ax[0].set_title("accel")
-    ax[1].set_title("gyro")
-    ax[2].set_title("fuse")
+    tn = []
+    # fig, ax = plt.subplots(3, 1)
+    # ax[0].set_title("accel")
+    # ax[1].set_title("gyro")
+    # ax[2].set_title("fuse")
 
     icm20948.icm20948_Gyro_Accel_Read()
     GyroA = np.array(Accel).copy()
@@ -157,20 +158,24 @@ if __name__ == '__main__':
             fuse_tilt.append(calc_fuse_tilt(accel_tilt[-1], gyro_tilt[-1],0.5))
 
             if len(accelx_lst) < 50:
-                accelx_lst.append(Accel[0])
+                accelx_lst.append(Accel[1])
+                time_base = currTime
             else:
                 accelx_avg = sum(accelx_lst)/50
-                new_accelx = Accel[0] - accelx_avg
+                new_accelx = Accel[1] - accelx_avg
+                # print(new_accelx)
+
                 # accelx_lst.pop(0)
                 # accelx_lst.append(Accel[0])
                 
                 state = kalman_filter(new_accelx,dt)
                 pos.append(state[0])
+                tn.append(currTime-time_base)
                 print("position",state[0])
 
     except KeyboardInterrupt:
         # plot tilt angles when program is interrupted
-        pos_plot = ax[0].plot(ts, pos)
+        pos_plot = plt.plot(tn, pos)
         # accel_plot = ax[0].plot(ts, accel_tilt)
         # gyro_plot = ax[1].plot(ts, gyro_tilt)
         # fuse_plot = ax[2].plot(ts, fuse_tilt)

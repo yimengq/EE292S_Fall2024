@@ -9,7 +9,7 @@ from filterpy.kalman import KalmanFilter
 
 import matplotlib.pyplot as plt
 
-dt = 0.1 # delta time for loop updates, 10 samples/sec
+dt = 0.01 # delta time for loop updates, 10 samples/sec
 GyroA = np.array([0, 0, 0]) 
 
 
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     # measurement noise
     R = np.array([[0.01]])
     # process noise
-    Q = 1e-3*np.array([[1., 0., 0.],
+    Q = 1e-5*np.array([[1., 0., 0.],
                   [0., 1., 0.],
                   [0., 0., 1.]])
     # covariance matrix
@@ -154,16 +154,16 @@ if __name__ == '__main__':
 
             ts.append(currTime)
             # calculate tilt angles (accel, gyro, fused)
-            accel_tilt.append(calc_accel_tilt()) # calculate level using accelerometer
-            gyro_tilt.append(calc_gyro_tilt()) # calculate level using gyro
-            fuse_tilt.append(calc_fuse_tilt(accel_tilt[-1], gyro_tilt[-1],0.5))
+            # accel_tilt.append(calc_accel_tilt()) # calculate level using accelerometer
+            # gyro_tilt.append(calc_gyro_tilt()) # calculate level using gyro
+            # fuse_tilt.append(calc_fuse_tilt(accel_tilt[-1], gyro_tilt[-1],0.5))
 
             if len(accelx_lst) < 50:
-                accelx_lst.append(Accel[1])
+                accelx_lst.append(Accel[0])
                 time_base = currTime
             else:
                 accelx_avg = sum(accelx_lst)/50
-                new_accelx = Accel[1] - accelx_avg
+                new_accelx = Accel[0] - accelx_avg
                 # print(new_accelx)
 
                 # accelx_lst.pop(0)
@@ -173,7 +173,7 @@ if __name__ == '__main__':
                 state = kf.x
                 pos.append(state[0])
                 tn.append(currTime-time_base)
-                print("position",state[0])
+                # print("position",state[0])
 
     except KeyboardInterrupt:
         # plot tilt angles when program is interrupted

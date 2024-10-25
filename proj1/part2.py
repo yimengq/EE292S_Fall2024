@@ -164,9 +164,8 @@ if __name__ == '__main__':
             # accel_tilt.append(calc_accel_tilt()) # calculate level using accelerometer
             # gyro_tilt.append(calc_gyro_tilt()) # calculate level using gyro
             # fuse_tilt.append(calc_fuse_tilt(accel_tilt[-1], gyro_tilt[-1],0.5))
-
+            accx = Accel[0]/16384*9.81
             if len(accelx_lst) < 50:
-                accx = Accel[0]/16384*9.81
                 accelx_lst.append(accx)
                 time_base = currTime
             else:

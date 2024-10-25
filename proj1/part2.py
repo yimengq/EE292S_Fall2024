@@ -134,7 +134,7 @@ if __name__ == '__main__':
     # measurement noise
     R = np.array([[0.01]])
     # process noise
-    Q = 1e-5*np.array([[1., 0., 0.],
+    Q = 1e5*np.array([[1., 0., 0.],
                   [0., 1., 0.],
                   [0., 0., 1.]])
     # covariance matrix

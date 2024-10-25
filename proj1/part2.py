@@ -123,7 +123,7 @@ if __name__ == '__main__':
     currTime = time.time()
     
     # setup Kalman filter
-            # initial state (accel, velocity, and position)
+            # initial state (pos, velocity, and accel)
     x = np.array([0., 0., 0.])
     # state transition matrix
     F = np.array([[1., dt, 0.5*dt**2],
@@ -174,9 +174,9 @@ if __name__ == '__main__':
                 state = kf.x
                 # take out the velocity and acceleration
                 
-                accel_kal.append(state[0])
+                accel_kal.append(state[2])
                 vel_kal.append(state[1])
-                pos_kal.append(state[2])
+                pos_kal.append(state[0])
                 accel_original.append(new_accelx)
                 vel_original.append(new_accelx*dt)
                 pos_original.append(new_accelx*dt**2/2)

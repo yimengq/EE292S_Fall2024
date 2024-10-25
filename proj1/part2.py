@@ -101,6 +101,8 @@ if __name__ == '__main__':
     gyro_tilt = []
     fuse_tilt = []
     
+    vel = 0
+    pos = 0
     pos_kal = []
     pos_original = []
     vel_kal = []
@@ -164,11 +166,12 @@ if __name__ == '__main__':
             # fuse_tilt.append(calc_fuse_tilt(accel_tilt[-1], gyro_tilt[-1],0.5))
 
             if len(accelx_lst) < 50:
-                accelx_lst.append(Accel[0])
+                accx = Accel[0]/16384*9.81
+                accelx_lst.append(accx)
                 time_base = currTime
             else:
                 accelx_avg = sum(accelx_lst)/50
-                new_accelx = Accel[0] - accelx_avg
+                new_accelx = accx - accelx_avg
                 kf.predict()                        # State prediction
                 kf.update(new_accelx) 
                 state = kf.x
@@ -177,9 +180,13 @@ if __name__ == '__main__':
                 accel_kal.append(state[2])
                 vel_kal.append(state[1])
                 pos_kal.append(state[0])
+                
+                pos = pos + vel*dt + new_accelx*dt**2/2
+                vel = vel + new_accelx*dt
+                
                 accel_original.append(new_accelx)
-                vel_original.append(new_accelx*dt)
-                pos_original.append(new_accelx*dt**2/2)
+                vel_original.append(vel)
+                pos_original.append(pos)
                 tn.append(currTime-time_base)
                 # print("position",state[0])
 

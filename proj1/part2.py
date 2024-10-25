@@ -190,12 +190,18 @@ if __name__ == '__main__':
         plt.plot(tn, accel_original, label='Original Acceleration')
         plt.xlabel('Time (s)')
         plt.ylabel('Acceleration (m/s^2)')
+        plt.savefig('acceleration_plot.png')  # Save acceleration plot
+        plt.close()  # Close the current figure
+        
         # plot vel_kal together with vel_original
         plt.figure()
         plt.plot(tn, vel_kal, label='Kalman Filtered Velocity')
         plt.plot(tn, vel_original, label='Original Velocity')
         plt.xlabel('Time (s)')
         plt.ylabel('Velocity (m/s)')
+        plt.savefig('vel_plot.png')  # Save acceleration plot
+        plt.close()  # Close the current figure
+        
         # plot pos_kal together with pos_original
         plt.figure()
         plt.plot(tn, pos_kal, label='Kalman Filtered Position')
@@ -203,5 +209,5 @@ if __name__ == '__main__':
         plt.xlabel('Time (s)')
         plt.ylabel('Position (m)')
         plt.legend()
-
-        plt.savefig('part2_pos.png')
+        plt.savefig('pos_plot.png')  # Save acceleration plot
+        plt.close()  # Close the current figure

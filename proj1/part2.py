@@ -84,38 +84,11 @@ def calc_fuse_tilt(accelTilt, gyroTilt, alpha=0.2):
     # fuse the two measurements
     return accelTilt*alpha + (1-alpha)*gyroTilt
 
-def kalman_filter(accelx,dt):   
-    # initial state (accel, velocity, and position)
-    x = np.array([0., 0., 0.])
-    # state transition matrix
-    F = np.array([[1., dt, 0.5*dt**2],
-                  [0., 1., dt],
-                  [0., 0., 1.]])
-    # measurement function
-    H = np.array([[0., 0., 1.]])
-    # measurement noise
-    R = np.array([[0.01]])
-    # process noise
-    Q = 1e-3*np.array([[1., 0., 0.],
-                  [0., 1., 0.],
-                  [0., 0., 1.]])
-    # covariance matrix
-    P = 3e-3*np.array([[1.,  0., 0.],
-                 [ 0., 1., 0.],
-                 [ 0., 0., 1.]])
-    # initialize Kalman Filter
-    kf = KalmanFilter(dim_x=3, dim_z=1)
-    kf.x = x
-    kf.F = F
-    kf.H = H
-    kf.R = R
-    kf.Q = Q
-    kf.P = P
-    
-    kf.predict()                        # State prediction
-    kf.update(accelx)                                   # Update
+# def kalman_filter(accelx,dt):   
+#     kf.predict()                        # State prediction
+#     kf.update(accelx)                                   # Update
 
-    return kf.x
+#     return kf.x
     
 
 
@@ -143,6 +116,34 @@ if __name__ == '__main__':
     icm20948.icm20948_Gyro_Accel_Read()
     GyroA = np.array(Accel).copy()
     currTime = time.time()
+    
+    # setup Kalman filter
+            # initial state (accel, velocity, and position)
+    x = np.array([0., 0., 0.])
+    # state transition matrix
+    F = np.array([[1., dt, 0.5*dt**2],
+                  [0., 1., dt],
+                  [0., 0., 1.]])
+    # measurement function
+    H = np.array([[0., 0., 1.]])
+    # measurement noise
+    R = np.array([[0.01]])
+    # process noise
+    Q = 1e-3*np.array([[1., 0., 0.],
+                  [0., 1., 0.],
+                  [0., 0., 1.]])
+    # covariance matrix
+    P = 3e-3*np.array([[1.,  0., 0.],
+                 [ 0., 1., 0.],
+                 [ 0., 0., 1.]])
+    # initialize Kalman Filter
+    kf = KalmanFilter(dim_x=3, dim_z=1)
+    kf.x = x
+    kf.F = F
+    kf.H = H
+    kf.R = R
+    kf.Q = Q
+    kf.P = P
 
     try:
         while True:
@@ -167,8 +168,9 @@ if __name__ == '__main__':
 
                 # accelx_lst.pop(0)
                 # accelx_lst.append(Accel[0])
-                
-                state = kalman_filter(new_accelx,dt)
+                kf.predict()                        # State prediction
+                kf.update(new_accelx) 
+                state = kf.x
                 pos.append(state[0])
                 tn.append(currTime-time_base)
                 print("position",state[0])

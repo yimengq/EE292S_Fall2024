@@ -25,24 +25,24 @@ def PRBS(taps, start=1):
 	lfsr = start
 
 	while True:
-        lsb = lfsr & 1
-        prbs += str(lsb)
-        lfsr = lfsr >> 1
+		lsb = lfsr & 1
+		prbs += str(lsb)
+		lfsr = lfsr >> 1
 
-        if lsb == 1:
-            lfsr = lfsr ^ taps
-        count +=1
+		if lsb == 1:
+			lfsr = lfsr ^ taps
+		count +=1
 
-        if lfsr == start:
-            break
+		if lfsr == start:
+			break
 
 	print(f'PRBS{maximal_length}: {prbs}')
 	print(f'Count: {count}')
 
 	if count == maximal_length:
-        print(f"Polynomial is maximal: {maximal_length}")
+		print(f"Polynomial is maximal: {maximal_length}")
 	else:
-        print(f"Polynomial is not maximal. Maximal length is {maximal_length}")
+		print(f"Polynomial is not maximal. Maximal length is {maximal_length}")
 
 	PRBS = []
 	for bit in prbs:
@@ -81,6 +81,7 @@ taps = ['100010000', '10111000', '1100000', '110000', '10100', '1100', '110']
 ADC = ADS1256.ADS1256()
 DAC = DAC8532.DAC8532()
 ADC.ADS1256_init()
+ADC.ADS1256_WriteReg(0X00,0X02)
 
 DAC.DAC8532_Out_Voltage(0x30, 3)
 DAC.DAC8532_Out_Voltage(0x34, 3)

@@ -164,7 +164,8 @@ def main():
                     adc_data[pin_index].append(adc_value)               
                     time_data.append(t)
             
-            print(np.array(adc_data).shape)
+            print("adc_data",np.array(adc_data).shape)
+            print("time",np.array(time_data).shape)
             # for pin in sense_pins:
             #     adc_value = ADC.ADS1256_GetChannalValue(pin) * 5.0 / 0x7fffff
             #     adc_values.append(adc_value)

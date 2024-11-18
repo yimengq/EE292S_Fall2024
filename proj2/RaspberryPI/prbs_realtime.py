@@ -53,7 +53,7 @@ def compute_centroid(peak_matrix, spacing=1):
     total_intensity = np.sum(peak_matrix)
     
     if total_intensity == 0:
-        raise ValueError("Peak matrix has no non-zero values; cannot calculate centroid.")
+        raise ValueError("Peak matrix has no non-zero values.")
 
     y_coords, x_coords = np.indices(peak_matrix.shape)
     centroid_x = np.sum(x_coords * peak_matrix) / total_intensity

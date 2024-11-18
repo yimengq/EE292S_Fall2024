@@ -22,7 +22,7 @@ sense_pins = [1, 2, 3, 4, 5, 6, 7]
 phases = [50, 100, 150, 200, 250]
 
 def crosscorrelation_func(sequence1, sequence2):
-    """Calculate cross-correlation of two sequences."""
+
     # correlation = correlate(sequence1, sequence2)
     # return correlation
     N = len(sequence1)
@@ -35,51 +35,37 @@ def crosscorrelation_func(sequence1, sequence2):
         correlation[i] = np.sum(prod)
     return correlation
 
-def PRBS(taps, start=1):
-    """Generate Pseudo-Random Binary Sequence (PRBS)."""
-    maximal_length = 2 ** len(taps) - 1
-    taps = int(taps, 2)
-    prbs = ""
-    count = 0
-    lfsr = start
+def PRBS(taps, seed=1):
+    lfsr = seed
+    taps_int = int(taps, 2)
+    prbs_sequence = []
+
     while True:
         lsb = lfsr & 1
-        prbs += str(lsb)
-        lfsr = lfsr >> 1
-        if lsb == 1:
-            lfsr = lfsr ^ taps
-        count += 1
-        if lfsr == start:
+        prbs_sequence.append(lsb)
+        lfsr = (lfsr >> 1) ^ (taps_int if lsb else 0)
+        if lfsr == seed:
             break
-    return np.array([1 if bit == '1' else 0 for bit in prbs], dtype=int)
+    return np.array(prbs_sequence, dtype=int)
 
-def compute_centroid(peak_values_array, spacing=1):
-    """Calculate the centroid and major/minor axes of peak values."""
-    total_weight = np.sum(peak_values_array)
-    if total_weight == 0:
-        raise ValueError("Total weight cannot be zero; check if peak_values_array has non-zero values.")
+def compute_centroid(peak_matrix, spacing=1):
+    
+    total_intensity = np.sum(peak_matrix)
+    
+    if total_intensity == 0:
+        raise ValueError("Peak matrix has no non-zero values; cannot calculate centroid.")
 
-    # X Coordinate (based on columns)
-    x_weights = np.sum(peak_values_array, axis=0)
-    x = np.sum(np.arange(peak_values_array.shape[1]) * (x_weights / total_weight))
+    y_coords, x_coords = np.indices(peak_matrix.shape)
+    centroid_x = np.sum(x_coords * peak_matrix) / total_intensity
+    centroid_y = np.sum(y_coords * peak_matrix) / total_intensity
 
-    # Y Coordinate (based on rows)
-    y_weights = np.sum(peak_values_array, axis=1)
-    y = np.sum(np.arange(peak_values_array.shape[0]) * (y_weights / total_weight))
+    std_x = np.sqrt(np.sum((x_coords - centroid_x) ** 2 * peak_matrix) / total_intensity)
+    std_y = np.sqrt(np.sum((y_coords - centroid_y) ** 2 * peak_matrix) / total_intensity)
 
-    # Round coordinates to get indices for axis calculations
-    digit_x = int(round(x))
-    digit_y = int(round(y))
+    major_axis = max(std_x, std_y) * spacing * 2
+    minor_axis = min(std_x, std_y) * spacing * 2
 
-    # Major/Minor Axes calculations
-    x_axes = 2 * np.std(peak_values_array[:, digit_x]) / np.sum(peak_values_array[:, digit_x]) * spacing if x_weights[digit_x] != 0 else 0
-    y_axes = 2 * np.std(peak_values_array[digit_y, :]) / np.sum(peak_values_array[digit_y, :]) * spacing if y_weights[digit_y] != 0 else 0
-
-    # Final results
-    coords = (x * spacing, y * spacing)
-    major_minor_axes = (max(x_axes, y_axes), min(x_axes, y_axes))
-
-    return coords, major_minor_axes
+    return (centroid_x * spacing, centroid_y * spacing), (major_axis, minor_axis)
 
 class FrequencyDetector:
     """Class to detect frequency of signal updates."""

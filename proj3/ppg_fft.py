@@ -32,9 +32,16 @@ avg_sampling_rate = np.mean(sampling_rates)
 
 print(f"Average Sampling Rate: {avg_sampling_rate:.2f} Hz")
 
+plt.clf()
+plt.plot(time, adc, label="ADC")
+plt.xlabel('time')
+plt.ylabel('adc')
+plt.legend()
+plt.savefig("adc.png")
+
 freq, adc_fft = fft(adc, 4096, 500)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))
-plt.xlim([0,100])
+plt.xlim([0,5])
 plt.savefig('fft.png')

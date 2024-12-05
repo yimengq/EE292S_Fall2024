@@ -152,14 +152,14 @@ def main():
     if SETUP_SPI:
         SPI = spidev.SpiDev(0, 0)
         SPI.mode = 0b01
-        SPI.max_speed_hz = 3000000
+        SPI.max_speed_hz = 1500000
     ADC.ADS1256_SetChannal(sense_pin)
     ADC.ADS1256_WriteCmd(0xFC)  # sync
     ADC.ADS1256_WriteCmd(0x00)  # wakeup
+    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_15000SPS'])
 
     timesteps = []
     adc_values = []
-    # adc_gain = 2
     freq_detector = FrequencyDetector()
     freq_regulator = FrequencyRegulator(FREQUENCY)
 

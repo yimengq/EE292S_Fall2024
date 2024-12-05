@@ -195,7 +195,7 @@ def main():
                 
     except KeyboardInterrupt:
         print(f"Frequency: {freq_detector.get_freq():.4f} Hz")
-        np.savez('ppg.npz', {'adc':np.array(adc_values), 'time':np.array(timesteps)})
+        np.savez('ppg_rock_fast.npz', {'adc':np.array(adc_values), 'time':np.array(timesteps)})
 
 if __name__ == "__main__":
     main()

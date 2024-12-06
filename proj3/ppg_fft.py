@@ -23,8 +23,8 @@ def fft(signal,_fft_size,f_sampling):
     return fft_freqs[:_fft_size//2], np.abs(fft_output[:_fft_size//2])
 
 
-adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][1000:]
-time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][1000:]
+adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][100:]
+time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][100:]
 
 time_diffs = np.diff(time) 
 sampling_rates = 1 / time_diffs  
@@ -39,7 +39,7 @@ plt.ylabel('adc')
 plt.legend()
 plt.savefig("adc.png")
 
-freq, adc_fft = fft(adc, 4096, 500)
+freq, adc_fft = fft(adc, 4096, avg_sampling_rate)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))

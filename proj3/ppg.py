@@ -106,7 +106,7 @@ import numpy as np
 matplotlib.use("Agg")
 
 SETUP_SPI = True
-FREQUENCY = 500
+FREQUENCY = 100
 GPIO_FREQ_FACTOR = 1
 sense_pin = 0
 
@@ -170,7 +170,7 @@ def main():
         
             freq_detector.update()
             # adc_value = adc_gain* (ADC.ADS1256_Read_ADC_Data() * 5.0 / 0x7fffff)
-            adc_value = ADC.ADS1256_Read_ADC_Data() * 5.0 / 0x7fffff
+            adc_value = ADC.ADS1256_GetChannalValue(sense_pin) * 5.0 / 0x7fffff
             adc_values.append(adc_value)
             timesteps.append(time.time())
             print(adc_value)

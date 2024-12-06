@@ -25,6 +25,7 @@ def fft(signal,_fft_size,f_sampling):
 
 adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][100:]
 time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][100:]
+time = time - time[0]
 
 time_diffs = np.diff(time) 
 sampling_rates = 1 / time_diffs  
@@ -34,14 +35,15 @@ print(f"Average Sampling Rate: {avg_sampling_rate:.2f} Hz")
 
 plt.clf()
 plt.plot(time, adc, label="ADC")
-plt.xlabel('time')
-plt.ylabel('adc')
+plt.xlabel('time (s)')
+plt.ylabel('adc (V)')
 plt.legend()
 plt.savefig("adc.png")
 
-freq, adc_fft = fft(adc, 4096, avg_sampling_rate)
+freq, adc_fft = fft(adc, 4096, 100)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))
-plt.xlim([0,5])
+plt.xlim([0,10])
+plt.xlabel('freq (Hz)')
 plt.savefig('fft.png')

@@ -43,9 +43,18 @@ plt.legend()
 plt.savefig("adc.png")
 
 freq, adc_fft = fft(adc, 4096, 400)
+# freq, adc_fft = fft(adc, 1024, 100)
+freq_range = (freq >= 1.0) & (freq <= 2)  
+index = np.argmax(adc_fft[freq_range]) 
+strongest_freq = freq[freq_range][index]
+T_fft = 1 / strongest_freq
+bpm_fft = 60 / T_fft
+print("BPM from FFT: ", bpm_fft)
+print("Strongest frequency: ", strongest_freq)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))
+plt.plot(strongest_freq, 20 * np.log10(adc_fft[freq == strongest_freq]), 'ro')
 plt.xlim([0,2])
 plt.xlabel('freq (Hz)')
 plt.savefig('fft.png')

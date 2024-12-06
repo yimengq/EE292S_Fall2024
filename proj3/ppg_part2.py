@@ -4,10 +4,11 @@ from scipy.signal import find_peaks
 from numpy import blackman
 from scipy.signal import butter, filtfilt
 
-data = np.load('ppg_2.npz', allow_pickle=True)['arr_0'].item()["adc"] # maybe we need to change this
+data = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][100:]
+data = data - np.mean(data)
 
-fs = 500 # maybe we need to change this
-peaks, _ = find_peaks(data, height=0.1, distance=fs / 2)  
+fs = 100 # maybe we need to change this
+peaks, _ = find_peaks(data, height=0.25, distance=fs/2)  
 time_diff = np.diff(peaks) / fs
 T = np.mean(time_diff)
 bpm = 60 / T

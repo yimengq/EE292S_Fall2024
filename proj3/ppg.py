@@ -105,11 +105,10 @@ import numpy as np
 # Use non-interactive backend
 matplotlib.use("Agg")
 
-SETUP_SPI = False
-SET_CHANNEL = False
+SETUP_SPI = True
 FREQUENCY = 500
 GPIO_FREQ_FACTOR = 1
-sense_pin = 10
+sense_pin = 0
 
 class FrequencyDetector:
     def __init__(self):

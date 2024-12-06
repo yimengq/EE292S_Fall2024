@@ -23,8 +23,8 @@ def fft(signal,_fft_size,f_sampling):
     return fft_freqs[:_fft_size//2], np.abs(fft_output[:_fft_size//2])
 
 
-adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc']
-time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time']
+adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][1000:]
+time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][1000:]
 
 time_diffs = np.diff(time) 
 sampling_rates = 1 / time_diffs  

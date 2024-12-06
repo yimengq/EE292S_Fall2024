@@ -152,11 +152,11 @@ def main():
     if SETUP_SPI:
         SPI = spidev.SpiDev(0, 0)
         SPI.mode = 0b01
-        SPI.max_speed_hz = 1500000
+        SPI.max_speed_hz = 200000
     ADC.ADS1256_SetChannal(sense_pin)
     ADC.ADS1256_WriteCmd(0xFC)  # sync
     ADC.ADS1256_WriteCmd(0x00)  # wakeup
-    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_15000SPS'])
+    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_2000SPS'])
 
     timesteps = []
     adc_values = []
@@ -195,7 +195,7 @@ def main():
                 
     except KeyboardInterrupt:
         print(f"Frequency: {freq_detector.get_freq():.4f} Hz")
-        np.savez('ppg_rock_fast.npz', {'adc':np.array(adc_values), 'time':np.array(timesteps)})
+        np.savez('ppg.npz', {'adc':np.array(adc_values), 'time':np.array(timesteps)})
 
 if __name__ == "__main__":
     main()

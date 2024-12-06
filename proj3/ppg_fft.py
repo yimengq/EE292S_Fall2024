@@ -24,6 +24,8 @@ def fft(signal,_fft_size,f_sampling):
 
 
 adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][100:]
+adc = adc - np.mean(adc)
+print(len(adc))
 time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][100:]
 time = time - time[0]
 
@@ -40,10 +42,10 @@ plt.ylabel('adc (V)')
 plt.legend()
 plt.savefig("adc.png")
 
-freq, adc_fft = fft(adc, 4096, 100)
+freq, adc_fft = fft(adc, 1024, 100)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))
-plt.xlim([0,5])
+plt.xlim([0,2])
 plt.xlabel('freq (Hz)')
 plt.savefig('fft.png')

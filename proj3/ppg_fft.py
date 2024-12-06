@@ -44,6 +44,6 @@ freq, adc_fft = fft(adc, 4096, 100)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))
-plt.xlim([0,10])
+plt.xlim([0,5])
 plt.xlabel('freq (Hz)')
 plt.savefig('fft.png')

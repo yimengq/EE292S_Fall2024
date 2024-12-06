@@ -106,9 +106,9 @@ import numpy as np
 matplotlib.use("Agg")
 
 SETUP_SPI = True
-FREQUENCY = 100
+FREQUENCY = 400
 GPIO_FREQ_FACTOR = 1
-sense_pin = 0
+sense_pin = 7
 
 class FrequencyDetector:
     def __init__(self):
@@ -147,17 +147,16 @@ def main():
     ADC = ADS1256.ADS1256()
     ADC.ADS1256_init()
     
-    # SPI setup
-    if SETUP_SPI:
-        SPI = spidev.SpiDev(0, 0)
-        SPI.mode = 0b01
-        SPI.max_speed_hz = 200000
-    ADC.ADS1256_SetChannal(sense_pin)
-    ADC.ADS1256_WriteCmd(0xFC)  # sync
-    ADC.ADS1256_WriteCmd(0x00)  # wakeup
-    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_1000SPS'])
+    # ADC.ADS1256_SetChannal(sense_pin)
+    # ADC.ADS1256_WriteCmd(0xFC)  # sync
+    # ADC.ADS1256_WriteCmd(0x00)  # wakeup
+    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_2000SPS'])
 
-    timesteps = []
+    SPI = spidev.SpiDev(0, 0)
+    SPI.mode = 0b01
+    SPI.max_speed_hz = 300000
+
+    # timesteps = []
     adc_values = []
     freq_detector = FrequencyDetector()
     freq_regulator = FrequencyRegulator(FREQUENCY)
@@ -172,8 +171,8 @@ def main():
             # adc_value = adc_gain* (ADC.ADS1256_Read_ADC_Data() * 5.0 / 0x7fffff)
             adc_value = ADC.ADS1256_GetChannalValue(sense_pin) * 5.0 / 0x7fffff
             adc_values.append(adc_value)
-            timesteps.append(time.time())
-            print(adc_value)
+            # timesteps.append(time.time())
+            # print(adc_value)
 
             # # Keep only the last 500 samples for plotting
             # if len(adc_values) > 500:
@@ -194,7 +193,7 @@ def main():
                 
     except KeyboardInterrupt:
         print(f"Frequency: {freq_detector.get_freq():.4f} Hz")
-        np.savez('ppg.npz', {'adc':np.array(adc_values), 'time':np.array(timesteps)})
+        np.savez('ppg.npz', {'adc':np.array(adc_values)})
 
 if __name__ == "__main__":
     main()

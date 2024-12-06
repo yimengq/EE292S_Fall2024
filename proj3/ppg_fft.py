@@ -23,26 +23,26 @@ def fft(signal,_fft_size,f_sampling):
     return fft_freqs[:_fft_size//2], np.abs(fft_output[:_fft_size//2])
 
 
-adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][100:]
+adc = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['adc'][400:]
 adc = adc - np.mean(adc)
 print(len(adc))
-time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][100:]
-time = time - time[0]
+# time = np.load('ppg.npz', allow_pickle=True)['arr_0'].item()['time'][200:]
+# time = time - time[0]
 
-time_diffs = np.diff(time) 
-sampling_rates = 1 / time_diffs  
-avg_sampling_rate = np.mean(sampling_rates)
+# time_diffs = np.diff(time) 
+# sampling_rates = 1 / time_diffs  
+# avg_sampling_rate = np.mean(sampling_rates)
 
-print(f"Average Sampling Rate: {avg_sampling_rate:.2f} Hz")
+# print(f"Average Sampling Rate: {avg_sampling_rate:.2f} Hz")
 
 plt.clf()
-plt.plot(time, adc, label="ADC")
+plt.plot(adc, label="ADC")
 plt.xlabel('time (s)')
 plt.ylabel('adc (V)')
 plt.legend()
 plt.savefig("adc.png")
 
-freq, adc_fft = fft(adc, 1024, 100)
+freq, adc_fft = fft(adc, 4096, 400)
 
 plt.clf()
 plt.plot(freq, 20 * np.log10(adc_fft+1e-10))

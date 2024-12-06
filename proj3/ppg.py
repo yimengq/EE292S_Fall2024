@@ -156,7 +156,7 @@ def main():
     ADC.ADS1256_SetChannal(sense_pin)
     ADC.ADS1256_WriteCmd(0xFC)  # sync
     ADC.ADS1256_WriteCmd(0x00)  # wakeup
-    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_2000SPS'])
+    ADC.ADS1256_ConfigADC(ADS1256.ADS1256_GAIN_E['ADS1256_GAIN_1'], ADS1256.ADS1256_DRATE_E['ADS1256_1000SPS'])
 
     timesteps = []
     adc_values = []

@@ -6,7 +6,7 @@ ScanMode = 0
 
 
 # gain channel
-ADS1256_GAIN_E = {'ADS1256_GAIN_1' : 0, # GAIN   1
+chADS1256_GAIN_E = {'ADS1256_GAIN_1' : 0, # GAIN   1
                   'ADS1256_GAIN_2' : 1,	# GAIN   2
                   'ADS1256_GAIN_4' : 2,	# GAIN   4
                   'ADS1256_GAIN_8' : 3,	# GAIN   8

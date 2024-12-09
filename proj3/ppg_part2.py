@@ -12,8 +12,9 @@ peaks, _ = find_peaks(data, height=0.0, distance=fs/2)
 time_diff = np.diff(peaks) / fs
 T = np.mean(time_diff)
 bpm = 60 / T
-max_hrv = np.max(time_diff) - np.min(time_diff)  
-rms_hrv = np.sqrt(np.mean((time_diff - np.mean(time_diff))**2))
+max_hrv = np.max(time_diff) - np.min(time_diff) 
+time_diff_diff = np.diff(time_diff)
+rms_hrv = np.sqrt(np.mean((time_diff_diff)**2)) 
 
 print("BPM: ", bpm)
 print("Max HRV: ", max_hrv)
